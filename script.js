@@ -6,14 +6,14 @@ class Traveler {
     }
 
     hunt() {
-        this.initalFood += 2
+        return this.initalFood += 2
     }
 
-    eat () {
+    eat() {
         if (this.initalFood > 0) {
-            this.initalFood --;
+            return this.initalFood--;
         } else {
-            this.isHealthy = false;
+            return this.isHealthy = false;
         }
     }
 }
@@ -25,27 +25,37 @@ class Wagon {
         this.passageiros = [];
     }
 
-    getAvailableSeatCount () {
-        if (this.capacity < this.passageiros) {
-            return this.capacity - this.passageiros.length;
-        } 
+    getAvailableSeatCount() {
+        
+        return this.capacity - this.passageiros.length;
+    
     }
 
-    join () {
-        if (this.passageiros.length < this.capacity) {
-            this.passageiros.push(1);
+    join(passageiro) {
+        
+        if (this.passageiros.length < this.capacity && this.capacity > 0) {
+             return this.passageiros.push(passageiro);
+        } else {
+            return this.capacity
         }
     }
 
-    shouldQuarantine () {
-        if (this.isHealthy === false) {
-            return true;
-        }
-
+    shouldQuarantine() {
+        let travelerSick = false;
+        this.passageiros.filter((passageiro)=>{
+            if (passageiro.isHealthy === false) {
+                travelerSick = true;
+            }
+        })
+        return travelerSick;
     }
 
     totalFood() {
-        return this.initalFood;
+        console.log(this.passageiros)
+        return this.passageiros.reduce((acc,passageiro) => {
+            return acc + passageiro.initalFood
+        },0)
+        
     }
 }
 
@@ -57,19 +67,19 @@ let wagon = new Wagon(2);
 let henrietta = new Traveler('Henrietta');
 let juan = new Traveler('Juan');
 let maude = new Traveler('Maude');
- 
+
 console.log(`${wagon.getAvailableSeatCount()} should be 2`);
- 
+
 wagon.join(henrietta);
 console.log(`${wagon.getAvailableSeatCount()} should be 1`);
- 
+
 wagon.join(juan);
 wagon.join(maude); // Não tem espaço para ela!
 console.log(`${wagon.getAvailableSeatCount()} should be 0`);
- 
+
 henrietta.hunt(); // pega mais comida
 juan.eat();
 juan.eat(); // juan agora está com fome (doente)
- 
+
 console.log(`${wagon.shouldQuarantine()} should be true since juan is sick`);
 console.log(`${wagon.totalFood()} should be 3`);
